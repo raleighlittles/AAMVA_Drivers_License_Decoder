@@ -1,5 +1,10 @@
+"""
+Implementation of AAMVA Data Elements. See Section D.12.5 'Data Elements', starting at page 52.
+"""
+
 import datetime
-import pdb
+
+# locals
 import ansi_d20
 
 EMPTY_KEY = "NONE"
@@ -34,6 +39,9 @@ class DataElement:
     key_name = ""
     value = ""
 
+    # Given a specific code and length, this creates a simple regular expression
+    # to search for that code in the text. e.g. if the code is 'ABC' and the length
+    # is between 2 and 4, this regex will match 2-4 characters after 'ABC' in a string
     def get_regex(self):
         return fr"{self.code}(.{{{self.min_length},{self.max_length}}})"
 
@@ -53,10 +61,10 @@ class JurisdictionSpecificVehicleClass(DataElement):
 
         # TODO: How does this work for commercial licenses?
         if self.value == "A":
-            return "Travel trailer/fifth wheel (noncommercial)"
+            return "[CA] Travel trailer/fifth wheel (noncommercial)"
 
         elif self.value == "B":
-            return "Housecar/motorhome (noncommercial)"
+            return "[CA] Housecar/motorhome (noncommercial)"
 
         elif self.value == "C":
             return "[CA-only] Standard vehicle"
@@ -556,7 +564,7 @@ class ComplianceType(DataElement):
     def __init__(self):
 
         self.code = "DDA"
-        self.key_name = "Compliance Type"
+        self.key_name = "Compliance Type (REAL ID)"
         self.min_length = 1
         self.max_length = self.min_length
 

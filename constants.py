@@ -1,4 +1,6 @@
-
+"""
+Constants used primarily in the header. See section D.12.3 'Header', starting at page 50.
+"""
 
 COMPLIANCE_INDICATOR = "@"
 FILE_TYPE = "ANSI"
