@@ -15,14 +15,14 @@ def parse_pdf417_data(pdf_417_raw_data : typing.List[str]):
 
     parsed_data = list()
 
-    data_elements = set([fields.JurisdictionSpecificVehicleClass(), fields.JurisdictionSpecificRestrictionCodes(), fields.JurisdictionSpecificEndorsementCodes(), fields.DocumentExpirationDate(), fields.CustomerFamilyName(), fields.CustomerFirstName(), fields.CustomerMiddleName(), fields.DocumentIssueDate(), fields.DateOfBirth(), fields.PhysicalDescriptionSex(), fields.PhysicalDescriptionEyeColor(), fields.PhysicalDescriptionHeight(), fields.AddressStreet1(), fields.AddressCity(), fields.AddressJurisdictionCode(), fields.AddressPostalCode(), fields.CustomerIDNumber(), fields.DocumentDiscriminator(), fields.CountryIdentification(), fields.FamilyNameTruncation(), fields.FirstNameTruncation(), fields.MiddleNameTruncation(), fields.AddressStreet2(), fields.HairColor(), fields.PlaceOfBirth(), fields.AuditInformation(), fields.InventoryControlNumber(), fields.AliasFamilyName(), fields.AliasGivenName(), fields.AliasSuffixName(), fields.NameSuffix(), fields.PhysicalDescriptionWeightRange(), fields.RaceEthnicity(), fields.StandardVehicleClassification(), fields.StandardEndorsementCode(), fields.StandardRestrictionCode(), fields.JurisdictionSpecificVehicleClassificationDescription(), fields.JurisdictionSpecificEndorsementCodeDescription(), fields.JurisdictionSpecificRestrictionCodeDescription(), fields.ComplianceType(), fields.CardRevisionDate(), fields.HAZMAT_Endorsement_Expiration_Date(), fields.LimitedDurationDocumentIndicator(), fields.WeightPounds(), fields.WeightKilograms(), fields.Under18Until(), fields.Under21Until(), fields.OrganDonorIndicator(), fields.VeteranIndicator()])
+    data_elements = set([aamva_fields.JurisdictionSpecificVehicleClass(), aamva_fields.JurisdictionSpecificRestrictionCodes(), aamva_fields.JurisdictionSpecificEndorsementCodes(), aamva_fields.DocumentExpirationDate(), aamva_fields.CustomerFamilyName(), aamva_fields.CustomerFirstName(), aamva_fields.CustomerMiddleName(), aamva_fields.DocumentIssueDate(), aamva_fields.DateOfBirth(), aamva_fields.PhysicalDescriptionSex(), aamva_fields.PhysicalDescriptionEyeColor(), aamva_fields.PhysicalDescriptionHeight(), aamva_fields.AddressStreet1(), aamva_fields.AddressCity(), aamva_fields.AddressJurisdictionCode(), aamva_fields.AddressPostalCode(), aamva_fields.CustomerIDNumber(), aamva_fields.DocumentDiscriminator(), aamva_fields.CountryIdentification(), aamva_fields.FamilyNameTruncation(), aamva_fields.FirstNameTruncation(), aamva_fields.MiddleNameTruncation(), aamva_fields.AddressStreet2(), aamva_fields.HairColor(), aamva_fields.PlaceOfBirth(), aamva_fields.AuditInformation(), aamva_fields.InventoryControlNumber(), aamva_fields.AliasFamilyName(), aamva_fields.AliasGivenName(), aamva_fields.AliasSuffixName(), aamva_fields.NameSuffix(), aamva_fields.PhysicalDescriptionWeightRange(), aamva_fields.RaceEthnicity(), aamva_fields.StandardVehicleClassification(), aamva_fields.StandardEndorsementCode(), aamva_fields.StandardRestrictionCode(), aamva_fields.JurisdictionSpecificVehicleClassificationDescription(), aamva_fields.JurisdictionSpecificEndorsementCodeDescription(), aamva_fields.JurisdictionSpecificRestrictionCodeDescription(), aamva_fields.ComplianceType(), aamva_fields.CardRevisionDate(), aamva_fields.HAZMAT_Endorsement_Expiration_Date(), aamva_fields.LimitedDurationDocumentIndicator(), aamva_fields.WeightPounds(), aamva_fields.WeightKilograms(), aamva_fields.Under18Until(), aamva_fields.Under21Until(), aamva_fields.OrganDonorIndicator(), aamva_fields.VeteranIndicator()])
 
     for idx, data_element in enumerate(data_elements):
 
         field_data = dict()
 
         for line in pdf_417_raw_data:
-            regex_matches = re.findall(data_element.get_regex(), line)
+            regex_matches = re.findall(data_element.get_regex(), line.strip())
             if len(regex_matches) > 1:
                 raise ValueError("Incorrect regex result, found too many values")
             
@@ -68,8 +68,8 @@ def parse_ansi_field(ansi_field_txt : str) -> dict:
     Example ANSI field: 
     "636000100002DL00410278ZV03190008DLDAQT64235789"
 
-    The AAMVA specification defines a minimum number of fields that must be present in this string,
-    but other states can add their own fields on top of that
+    The AAMVA specification defines a minimum number of aamva_fields that must be present in this string,
+    but other states can add their own aamva_fields on top of that
     """
 
     issuer_id_num = ansi_field_txt[0 : constants.ISSUER_ID_NUM_LEN]

@@ -67,7 +67,7 @@ class JurisdictionSpecificVehicleClass(DataElement):
             return "[CA] Housecar/motorhome (noncommercial)"
 
         elif self.value == "C":
-            return "[CA-only] Standard vehicle"
+            return "[CA-only] Standard vehicle (GVWR < 26000 lbs)"
 
         elif self.value == "D":
             return "[Other states besides CA] Standard vehicle"

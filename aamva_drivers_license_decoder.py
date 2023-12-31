@@ -48,6 +48,7 @@ if __name__ == "__main__":
                     output_file.flush()
 
             else:
+                print("---------------------")
                 print(formatted_results_json)
 
     else:
