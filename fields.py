@@ -4,9 +4,7 @@ import ansi_d20
 
 EMPTY_KEY = "NONE"
 
-##### HELPER METHODS #####
-
-
+# ----- HELPER METHODS -----
 def parse_date(mmddyyyy_date) -> datetime.datetime:
 
     month, day, year = mmddyyyy_date[0:2], mmddyyyy_date[2:4], mmddyyyy_date[4:8]
@@ -53,6 +51,7 @@ class JurisdictionSpecificVehicleClass(DataElement):
 
     def parse(self):
 
+        # TODO: How does this work for commercial licenses?
         if self.value == "A":
             return "Travel trailer/fifth wheel (noncommercial)"
 
@@ -60,10 +59,10 @@ class JurisdictionSpecificVehicleClass(DataElement):
             return "Housecar/motorhome (noncommercial)"
 
         elif self.value == "C":
-            return "[CA] Standard vehicle"
+            return "[CA-only] Standard vehicle"
 
         elif self.value == "D":
-            return "Standard vehicle"
+            return "[Other states besides CA] Standard vehicle"
 
         elif self.value == "M1":
             return "Motorcycle license"
