@@ -6,25 +6,28 @@ EMPTY_KEY = "NONE"
 
 ##### HELPER METHODS #####
 
+
 def parse_date(mmddyyyy_date) -> datetime.datetime:
 
     month, day, year = mmddyyyy_date[0:2], mmddyyyy_date[2:4], mmddyyyy_date[4:8]
     return datetime.datetime(year=int(year), month=int(month), day=int(day))
 
-def parse_truncation(truncation_flag) -> str:
-        if truncation_flag == "T":
-            return "Truncated"
-        
-        elif truncation_flag == "N":
-            return "Not truncated"
-        
-        elif truncation_flag == "U":
-            return "Unknown if truncated"
-        
-        else:
-            return ""
 
-##### --------------------
+def parse_truncation(truncation_flag) -> str:
+    if truncation_flag == "T":
+        return "Truncated"
+
+    elif truncation_flag == "N":
+        return "Not truncated"
+
+    elif truncation_flag == "U":
+        return "Unknown if truncated"
+
+    else:
+        return ""
+
+# --------------------
+
 
 class DataElement:
     code = ""
@@ -35,7 +38,7 @@ class DataElement:
 
     def get_regex(self):
         return fr"{self.code}(.{{{self.min_length},{self.max_length}}})"
-    
+
     def parse(self):
         return self.value
 
@@ -48,29 +51,29 @@ class JurisdictionSpecificVehicleClass(DataElement):
         self.min_length = 1
         self.max_length = 6
 
-
     def parse(self):
 
         if self.value == "A":
             return "Travel trailer/fifth wheel (noncommercial)"
-        
+
         elif self.value == "B":
             return "Housecar/motorhome (noncommercial)"
-        
+
         elif self.value == "C":
             return "[CA] Standard vehicle"
-        
+
         elif self.value == "D":
             return "Standard vehicle"
-        
+
         elif self.value == "M1":
             return "Motorcycle license"
-        
+
         elif self.value == "M2":
             return "Limited motorcycle license (moped/scooter only)"
-        
+
         else:
-            raise ValueError(f"'{self.value}' is not a recognized license type")
+            raise ValueError(
+                f"'{self.value}' is not a recognized license type")
 
 
 class JurisdictionSpecificRestrictionCodes(DataElement):
@@ -81,14 +84,15 @@ class JurisdictionSpecificRestrictionCodes(DataElement):
         self.min_length = 4
         self.max_length = 12
 
-    
+
 class JurisdictionSpecificEndorsementCodes(DataElement):
 
     def __init__(self):
         self.code = "DCD"
-        self.key_name =  "Jurisdiction-specific endorsement codes"
+        self.key_name = "Jurisdiction-specific endorsement codes"
         self.min_length = 4
         self.max_length = 5
+
 
 class DocumentExpirationDate(DataElement):
 
@@ -106,21 +110,22 @@ class DocumentExpirationDate(DataElement):
 
             if (timestamp > current):
                 return f"Expires in {difference_timestamp.days} days"
-            
+
             elif (current > timestamp):
                 return f"Expired {abs(difference_timestamp.days)} days ago"
-            
-            else:
-                raise ValueError("Timestamp of expiration matches current timestamp -- verify data was correctly parsed")
-        
-        #month, day, year = self.value[0:2], self.value[2:4], self.value[4:8]
 
-        #timestamp = datetime.datetime(year=int(year), month=int(month), day=int(day))
+            else:
+                raise ValueError(
+                    "Timestamp of expiration matches current timestamp -- verify data was correctly parsed")
+
+        # month, day, year = self.value[0:2], self.value[2:4], self.value[4:8]
+
+        # timestamp = datetime.datetime(year=int(year), month=int(month), day=int(day))
         timestamp = parse_date(self.value)
         now = datetime.datetime.now()
 
         return f"{timestamp.isoformat()} | {get_expired_or_expiration_string(timestamp, now)}"
-        
+
 
 class CustomerFamilyName(DataElement):
 
@@ -139,6 +144,7 @@ class CustomerFirstName(DataElement):
         self.min_length = 3
         self.max_length = 40
 
+
 class CustomerMiddleName(DataElement):
 
     def __init__(self):
@@ -151,7 +157,7 @@ class CustomerMiddleName(DataElement):
 
         if self.value == EMPTY_KEY:
             return ""
-        
+
         else:
             return self.value
 
@@ -166,11 +172,10 @@ class DocumentIssueDate(DataElement):
 
     def parse(self):
 
-        #month, day, year = self.value[0:2], self.value[2:4], self.value[4:8]
-        #timestamp = datetime.datetime(year=int(year), month=int(month), day=int(day))
+        # month, day, year = self.value[0:2], self.value[2:4], self.value[4:8]
+        # timestamp = datetime.datetime(year=int(year), month=int(month), day=int(day))
         timestamp = parse_date(self.value)
         return timestamp.isoformat()
-
 
 
 class DateOfBirth(DataElement):
@@ -180,15 +185,16 @@ class DateOfBirth(DataElement):
         self.key_name = "Date of Birth"
         self.min_length = 8
         self.max_length = self.min_length
-        
+
     def parse(self):
 
-        #month, day, year = self.value[0:2], self.value[2:4], self.value[4:8]
-        #timestamp = datetime.datetime(year=int(year), month=int(month), day=int(day))
+        # month, day, year = self.value[0:2], self.value[2:4], self.value[4:8]
+        # timestamp = datetime.datetime(year=int(year), month=int(month), day=int(day))
         timestamp = parse_date(self.value)
         now = datetime.datetime.now()
 
         return f"{timestamp.isoformat()} | Approx age: {now.year - timestamp.year}"
+
 
 class PhysicalDescriptionSex(DataElement):
 
@@ -200,16 +206,16 @@ class PhysicalDescriptionSex(DataElement):
         self.max_length = self.min_length
 
     def parse(self):
-        
+
         if str(self.value) == "1":
             return "Male"
-        
+
         elif str(self.value) == "2":
             return "Female"
-        
+
         elif str(self.value) == "9":
             return "Not specified"
-        
+
         else:
             raise ValueError(f"'{self.value}' is not a valid value")
 
@@ -225,7 +231,6 @@ class PhysicalDescriptionEyeColor(DataElement):
 
     def parse(self):
         return ansi_d20.colors.get(self.value)
-    
 
 
 class PhysicalDescriptionHeight(DataElement):
@@ -251,7 +256,7 @@ class PhysicalDescriptionHeight(DataElement):
             inches = int(value)
             inches_to_feet = 12
             return f"{inches // inches_to_feet}'{inches % inches_to_feet} ({inches} inches)"
-        
+
         elif units.lower() == "cm":
             # metric, no conversion needed :)
             return f"{int(value)} centimeters"
@@ -337,7 +342,7 @@ class FamilyNameTruncation(DataElement):
 
     def parse(self):
         return parse_truncation(self.value)
-        
+
 
 class FirstNameTruncation(DataElement):
 
@@ -350,7 +355,7 @@ class FirstNameTruncation(DataElement):
 
     def parse(self):
         return parse_truncation(self.value)
-    
+
 
 class MiddleNameTruncation(DataElement):
 
@@ -366,7 +371,7 @@ class MiddleNameTruncation(DataElement):
 
 
 ### OPTIONAL ELEMENTS ###
-    
+
 class AddressStreet2(DataElement):
 
     def __init__(self):
@@ -386,13 +391,12 @@ class HairColor(DataElement):
         self.min_length = 3
         self.max_length = 12
 
-
     def parse(self):
         return ansi_d20.colors.get(self.value)
-    
+
 
 class PlaceOfBirth(DataElement):
-    
+
     def __init__(self):
 
         self.code = "DCI"
@@ -421,12 +425,13 @@ class InventoryControlNumber(DataElement):
 
 
 class AliasFamilyName(DataElement):
-    
+
     def __init__(self):
         self.code = "DBN"
         self.key_name = "Alias / AKA Family Name"
         self.min_length = 2
         self.max_length = 10
+
 
 class AliasGivenName(DataElement):
 
@@ -435,6 +440,7 @@ class AliasGivenName(DataElement):
         self.key_name = "Alias / AKA Given Name"
         self.min_length = 2
         self.max_length = 15
+
 
 class AliasSuffixName(DataElement):
 
@@ -467,10 +473,11 @@ class PhysicalDescriptionWeightRange(DataElement):
 
     def parse(self):
 
-        weight_ranges = dict({ '0': "up to 31 kg (up to 70 lbs)", '1': "32 - 45 kg (71 - 100 lbs)", '2': "46 - 59 kg (101 – 130 lbs)", '3': "60 - 70 kg (131 – 160 lbs)", '4': "71 - 86 kg (161 – 190 lbs) ", '5': "87 - 100 kg (191 – 220 lbs) ", '6': "101 - 113 kg (221 – 250 lbs) ", '7': "114 - 127 kg (251 – 280 lbs)", '8': " 128 – 145 kg (281 – 320 lbs)", '9': "146+ kg (321+ lbs)"})
+        weight_ranges = dict({'0': "up to 31 kg (up to 70 lbs)", '1': "32 - 45 kg (71 - 100 lbs)", '2': "46 - 59 kg (101 – 130 lbs)", '3': "60 - 70 kg (131 – 160 lbs)", '4': "71 - 86 kg (161 – 190 lbs) ",
+                             '5': "87 - 100 kg (191 – 220 lbs) ", '6': "101 - 113 kg (221 – 250 lbs) ", '7': "114 - 127 kg (251 – 280 lbs)", '8': " 128 – 145 kg (281 – 320 lbs)", '9': "146+ kg (321+ lbs)"})
 
         return weight_ranges.get(str(self.value))
-    
+
 
 class RaceEthnicity(DataElement):
 
@@ -483,7 +490,7 @@ class RaceEthnicity(DataElement):
 
     def parse(self):
         return ansi_d20.races_and_ethnicities.get(self.value)
-    
+
 
 class StandardVehicleClassification(DataElement):
 
@@ -493,6 +500,7 @@ class StandardVehicleClassification(DataElement):
         self.key_name = "Standard vehicle classification"
         self.min_length = 4
         self.max_length = self.min_length
+
 
 class StandardEndorsementCode(DataElement):
 
@@ -523,6 +531,7 @@ class JurisdictionSpecificVehicleClassificationDescription(DataElement):
         self.min_length = 10
         self.max_length = 50
 
+
 class JurisdictionSpecificEndorsementCodeDescription(DataElement):
 
     def __init__(self):
@@ -531,6 +540,7 @@ class JurisdictionSpecificEndorsementCodeDescription(DataElement):
         self.key_name = "Jurisdiction-specific endorsement code description"
         self.min_length = 10
         self.max_length = 50
+
 
 class JurisdictionSpecificRestrictionCodeDescription(DataElement):
 
@@ -555,13 +565,13 @@ class ComplianceType(DataElement):
 
         if self.value == "F":
             return "Compliant ✅"
-        
+
         elif self.value == "N":
             return "Non-compliant"
-        
+
         else:
             raise ValueError("Can't determine compliance type")
-        
+
 
 class CardRevisionDate(DataElement):
 
@@ -574,7 +584,7 @@ class CardRevisionDate(DataElement):
 
     def parse(self):
         return parse_date(self.value).isoformat()
-    
+
 
 class HAZMAT_Endorsement_Expiration_Date(DataElement):
 
@@ -588,7 +598,7 @@ class HAZMAT_Endorsement_Expiration_Date(DataElement):
     def parse(self):
 
         return parse_date(self.value).isoformat()
-    
+
 
 class LimitedDurationDocumentIndicator(DataElement):
 
@@ -599,6 +609,7 @@ class LimitedDurationDocumentIndicator(DataElement):
         self.min_length = 1
         self.max_length = self.min_length
 
+
 class WeightPounds(DataElement):
 
     def __init__(self):
@@ -606,6 +617,7 @@ class WeightPounds(DataElement):
         self.key_name = "Weight (pounds)"
         self.min_length = 3
         self.max_length = self.min_length
+
 
 class WeightKilograms(DataElement):
 
@@ -624,7 +636,7 @@ class Under18Until(DataElement):
         self.min_length = 8
         self.max_length = self.min_length
 
-    
+
 class Under19Until(DataElement):
 
     def __init__(self):
@@ -633,6 +645,7 @@ class Under19Until(DataElement):
         self.min_length = 8
         self.max_length = self.min_length
 
+
 class Under21Until(DataElement):
 
     def __init__(self):
@@ -640,6 +653,7 @@ class Under21Until(DataElement):
         self.key_name = "Under 21 Until"
         self.min_length = 8
         self.max_length = self.min_length
+
 
 class OrganDonorIndicator(DataElement):
 
@@ -650,8 +664,9 @@ class OrganDonorIndicator(DataElement):
         self.max_length = self.min_length
 
     def parse(self):
-        return "True" if self.value == "1" else "False"
-    
+        return "Organ Donor" if self.value == "1" else "Not an organ donor"
+
+
 class VeteranIndicator(DataElement):
 
     def __init__(self):
@@ -659,3 +674,6 @@ class VeteranIndicator(DataElement):
         self.key_name = "Veteran Indicator"
         self.min_length = 1
         self.max_length = self.min_length
+
+    def parse(self):
+        return "Veteran" if self.value == "1" else "Not a veteran"
