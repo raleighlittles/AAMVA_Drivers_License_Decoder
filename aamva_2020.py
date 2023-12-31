@@ -5,7 +5,7 @@ import re
 
 # locals
 import constants
-import fields
+import aamva_fields
 
 class AAMVA_Header_Exception(Exception):
     pass

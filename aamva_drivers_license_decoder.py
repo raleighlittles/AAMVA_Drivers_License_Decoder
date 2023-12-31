@@ -50,4 +50,5 @@ if __name__ == "__main__":
             else:
                 print(formatted_results_json)
 
-        
+    else:
+        raise FileNotFoundError(f"Error can't find input file '{input_filename}'")

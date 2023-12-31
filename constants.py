@@ -1,5 +1,5 @@
 
-# Headers, see page 50 - 60
+
 COMPLIANCE_INDICATOR = "@"
 FILE_TYPE = "ANSI"
 

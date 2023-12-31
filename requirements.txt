@@ -1,0 +1,4 @@
+pdf417decoder==1.0.8
+Flask==3.0.0
+flask_wtf==1.2.1
+wtforms==3.1.1
