@@ -44,7 +44,6 @@ def parse_pdf417_data(pdf_417_raw_data : typing.List[str]):
                 break
 
     print(f"Extracted {len(parsed_data)} elements from PDF 417 data")
-    pdb.set_trace()
     return parsed_data
 
 

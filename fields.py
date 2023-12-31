@@ -58,7 +58,10 @@ class JurisdictionSpecificVehicleClass(DataElement):
             return "Housecar/motorhome (noncommercial)"
         
         elif self.value == "C":
-            return "Standard vehicle ( < 10,000 lbs GVWR)"
+            return "[CA] Standard vehicle"
+        
+        elif self.value == "D":
+            return "Standard vehicle"
         
         elif self.value == "M1":
             return "Motorcycle license"
@@ -183,7 +186,9 @@ class DateOfBirth(DataElement):
         #month, day, year = self.value[0:2], self.value[2:4], self.value[4:8]
         #timestamp = datetime.datetime(year=int(year), month=int(month), day=int(day))
         timestamp = parse_date(self.value)
-        return timestamp.isoformat()
+        now = datetime.datetime.now()
+
+        return f"{timestamp.isoformat()} | Approx age: {now.year - timestamp.year}"
 
 class PhysicalDescriptionSex(DataElement):
 
