@@ -125,9 +125,6 @@ class DocumentExpirationDate(DataElement):
                 raise ValueError(
                     "Timestamp of expiration matches current timestamp -- verify data was correctly parsed")
 
-        # month, day, year = self.value[0:2], self.value[2:4], self.value[4:8]
-
-        # timestamp = datetime.datetime(year=int(year), month=int(month), day=int(day))
         timestamp = parse_date(self.value)
         now = datetime.datetime.now()
 
@@ -179,8 +176,6 @@ class DocumentIssueDate(DataElement):
 
     def parse(self):
 
-        # month, day, year = self.value[0:2], self.value[2:4], self.value[4:8]
-        # timestamp = datetime.datetime(year=int(year), month=int(month), day=int(day))
         timestamp = parse_date(self.value)
         return timestamp.isoformat()
 
@@ -195,8 +190,6 @@ class DateOfBirth(DataElement):
 
     def parse(self):
 
-        # month, day, year = self.value[0:2], self.value[2:4], self.value[4:8]
-        # timestamp = datetime.datetime(year=int(year), month=int(month), day=int(day))
         timestamp = parse_date(self.value)
         now = datetime.datetime.now()
 
